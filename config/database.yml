@@ -1,0 +1,23 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  port: <%= ENV.fetch("CHATRAPIDO_DB_PORT") { 5432 } %>
+
+development:
+  <<: *default
+  database: <%= ENV.fetch("CHATRAPIDO_DB_NAME") { "chatrapido_development" } %>
+  username: <%= ENV.fetch("CHATRAPIDO_DB_USER") { "user" } %>
+  password: <%= ENV.fetch("CHATRAPIDO_DB_PASSWORD") { "password" } %>
+  host: <%= ENV.fetch("CHATRAPIDO_DB_HOST") { "local" } %>
+
+test:
+  <<: *default
+  database: chatrapido_test
+
+production:
+  <<: *default
+  database: <%= ENV.fetch("CHATRAPIDO_DB_NAME") { "chatrapido_development" } %>
+  username: <%= ENV.fetch("CHATRAPIDO_DB_USER") { "rails_svc" } %>
+  password: <%= ENV.fetch("CHATRAPIDO_DB_PASSWORD") { "senhaforte123" } %>
+  host: <%= ENV.fetch("CHATRAPIDO_DB_HOST") { "10.10.10.10" } %>
