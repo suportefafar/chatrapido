@@ -1,20 +1,45 @@
-<div class="flex-grow-1 d-flex flex-column align-items-center justify-content-center p-4" style="background-color: var(--color-primary); color: var(--color-secondary-dark);">
-  <div class="ds-card w-100 text-center" style="max-width: 28rem; background: var(--color-white);">
-    <div class="ds-hero-tag mb-4">Farmácia UFMG</div>
-    <h1 class="ds-h1 mb-2 text-dark">ChatRapido</h1>
-    <p class="ds-body-sm text-secondary mb-4">Mensagens efêmeras, anônimas e rápidas.</p>
+<div class="flex-grow-1 d-flex flex-column align-items-center justify-content-center p-4" 
+     style="background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); color: var(--color-secondary-dark);">
+  
+  <style>
+    @keyframes float {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(2deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+    .floating-logo {
+      animation: float 4s ease-in-out infinite;
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: var(--shadow-xl);
+      border-radius: var(--radius-2xl);
+    }
+  </style>
 
-    <%= button_to "Criar Nova Sala", rooms_path, class: "btn btn-secondary btn-lg w-100 fw-bold" %>
+  <div class="ds-card glass-card w-100 text-center p-5" style="max-width: 32rem;">
+    <div class="text-center mb-4">
+      <%= image_tag 'icon.png', alt: "ChatRapido Icon", class: "img-fluid floating-logo", style: "max-height: 140px;" %>
+    </div>
+    
+    <div class="ds-hero-tag mb-3" style="background: var(--color-secondary-dark); color: var(--color-primary);">Farmácia UFMG</div>
+    <h1 class="ds-display-2 mb-2 text-dark" style="font-family: var(--font-display);">ChatRapido</h1>
+    <p class="ds-body text-secondary mb-5 px-4">Comunicação efêmera, segura e instantânea para a comunidade acadêmica.</p>
 
-    <div class="ds-divider ds-divider-gold mx-auto w-100" style="position: relative; margin: var(--space-6) 0;">
-      <span class="ds-caption" style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: var(--color-white); padding: 0 var(--space-2);">OU</span>
+    <%= button_to "Criar Nova Sala", rooms_path, class: "btn btn-primary btn-xl w-100 fw-bold mb-4 shadow-gold" %>
+
+    <div class="ds-divider ds-divider-gold mx-auto w-100 mb-5" style="position: relative;">
+      <span class="ds-caption px-3" style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: white; color: var(--color-gray-400); font-weight: 600;">OU ENTRE EM UMA SALA</span>
     </div>
 
     <%= form_with url: join_rooms_path, method: :post do |form| %>
       <div class="form-group mb-0">
         <div class="input-wrap w-100 d-flex gap-2 align-items-stretch">
-          <%= form.text_field :token, placeholder: "Código (Ex: A1B2C3)", class: "input input-lg text-center text-uppercase ds-mono", maxlength: 6 %>
-          <%= form.submit "Entrar", class: "btn btn-secondary btn-lg fw-semibold" %>
+          <%= form.text_field :token, placeholder: "CÓDIGO DA SALA", class: "input input-lg text-center text-uppercase ds-mono fw-bold", maxlength: 6, style: "letter-spacing: 0.2em; border-width: 2px;" %>
+          <%= form.submit "Entrar", class: "btn btn-secondary btn-lg px-4 fw-bold" %>
         </div>
       </div>
     <% end %>
