@@ -2,22 +2,29 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  port: <%= ENV.fetch("CHATRAPIDO_DB_PORT") { 5432 } %>
+  host: <%= ENV.fetch("POSTGRES_HOST") { "localhost" } %>
+  port: <%= ENV.fetch("POSTGRES_PORT") { 5432 } %>
+  username: <%= ENV.fetch("POSTGRES_USER") { "user" } %>
+  password: <%= ENV.fetch("POSTGRES_PASSWORD") { "password" } %>
 
 development:
   <<: *default
   database: <%= ENV.fetch("CHATRAPIDO_DB_NAME") { "chatrapido_development" } %>
-  username: <%= ENV.fetch("CHATRAPIDO_DB_USER") { "user" } %>
-  password: <%= ENV.fetch("CHATRAPIDO_DB_PASSWORD") { "password" } %>
-  host: <%= ENV.fetch("CHATRAPIDO_DB_HOST") { "local" } %>
 
 test:
   <<: *default
   database: chatrapido_test
 
 production:
-  <<: *default
-  database: <%= ENV.fetch("CHATRAPIDO_DB_NAME") { "chatrapido_development" } %>
-  username: <%= ENV.fetch("CHATRAPIDO_DB_USER") { "rails_svc" } %>
-  password: <%= ENV.fetch("CHATRAPIDO_DB_PASSWORD") { "senhaforte123" } %>
-  host: <%= ENV.fetch("CHATRAPIDO_DB_HOST") { "10.10.10.10" } %>
+  primary: &production_db
+    <<: *default
+    database: <%= ENV.fetch("CHATRAPIDO_DB_NAME") { "chatrapido_production" } %>
+  cache:
+    <<: *production_db
+    database: <%= ENV.fetch("CHATRAPIDO_CACHE_DB_NAME") { ENV.fetch("CHATRAPIDO_DB_NAME", "chatrapido_production") + "_cache" } %>
+  queue:
+    <<: *production_db
+    database: <%= ENV.fetch("CHATRAPIDO_QUEUE_DB_NAME") { ENV.fetch("CHATRAPIDO_DB_NAME", "chatrapido_production") + "_queue" } %>
+  cable:
+    <<: *production_db
+    database: <%= ENV.fetch("CHATRAPIDO_CABLE_DB_NAME") { ENV.fetch("CHATRAPIDO_DB_NAME", "chatrapido_production") + "_cable" } %>
