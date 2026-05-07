@@ -1,102 +1,86 @@
 <% content_for :title, "Sala #{@room.token} | ChatRápido" %>
 
-<div class="flex-grow-1 d-flex flex-column h-100 bg-light mx-auto shadow-lg position-relative" style="max-width: 48rem; width: 100%;">
+<div style="display: flex; flex-direction: column; height: 100vh; max-width: 48rem; margin: 0 auto; width: 100%; background-color: var(--color-gray-50); box-shadow: var(--shadow-md); overflow: hidden;">
   <!-- Header -->
-  <header class="ds-nav z-3 sticky-top" style="padding: var(--space-3) var(--space-4); border-bottom: 4px solid var(--color-primary); background: var(--color-secondary-dark);">
-    <div class="d-flex align-items-center gap-3 flex-grow-1">
-      <div class="header-logo-container bg-white rounded-3 p-1 shadow-sm d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-        <%= image_tag 'icon.png', alt: "Icon", style: "max-width: 100%; max-height: 100%; object-fit: contain;" %>
+  <header style="flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: var(--space-3) var(--space-4); background-color: var(--color-secondary-dark); border-bottom: 4px solid var(--color-primary);">
+    <div style="display: flex; align-items: center; gap: var(--space-3);">
+      <div style="width: 40px; height: 40px; background-color: var(--color-white); border-radius: var(--radius-md); padding: var(--space-1); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        <%= image_tag 'icon.png', alt: "Icon", style: "max-width: 100%; max-height: 100%;" %>
       </div>
-      <div class="d-flex flex-column">
-        <div class="d-flex align-items-center gap-2">
-          <h2 class="ds-nav-brand mb-0" style="font-size: var(--text-lg); color: var(--color-primary);">ChatRapido</h2>
-          <span class="badge badge-primary ds-mono" style="font-size: 0.7rem;">Sala <%= @room.token %></span>
+      <div style="display: flex; flex-direction: column; overflow: hidden;">
+        <div style="display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap;">
+          <h2 style="margin: 0; font-family: var(--font-display); font-size: var(--text-lg); color: var(--color-primary); white-space: nowrap;">ChatRápido</h2>
+          <span style="background-color: var(--color-primary-20); color: var(--color-primary-light); padding: 2px 6px; border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: var(--text-xs); font-weight: bold; white-space: nowrap;">Sala <%= @room.token %></span>
         </div>
-        <span class="ds-caption" style="color: var(--color-gray-400); font-size: 0.7rem;">Expira em 24h sem uso</span>
+        <span style="color: var(--color-gray-400); font-size: var(--text-xs); white-space: nowrap;">Expira em 24h sem uso</span>
       </div>
     </div>
-    <div class="d-flex align-items-center gap-3">
-      <button onclick="navigator.clipboard.writeText(window.location.href); alert('Link copiado!')" class="btn btn-primary btn-sm fw-semibold shadow-sm">
-        Copiar Link
+    <div style="display: flex; align-items: center; gap: var(--space-3); flex-shrink: 0;">
+      <button onclick="navigator.clipboard.writeText(window.location.href); alert('Link copiado!')" class="ffds-btn ffds-btn-primary" style="padding: var(--space-2) var(--space-3); font-size: var(--text-sm); font-weight: bold; display: flex; align-items: center; gap: var(--space-2);">
+        <i data-lucide="copy" style="width: 16px; height: 16px;"></i> <span class="d-none d-sm-inline">Copiar Link</span>
       </button>
-      <%= link_to "Sair", root_path, class: "text-white text-decoration-none fw-semibold small opacity-75 hover-opacity-100" %>
+      <%= link_to "Sair", root_path, style: "color: var(--color-white); text-decoration: none; font-size: var(--text-sm); opacity: 0.8; font-weight: bold;" %>
     </div>
   </header>
 
-  <!-- Messages Output -->
-  <div class="flex-grow-1 overflow-auto p-3 d-flex flex-column gap-3" id="messages_container" style="scroll-behavior: smooth;">
+  <!-- Messages Viewport -->
+  <main id="messages_container" style="flex-grow: 1; overflow-y: auto; padding: var(--space-4); display: flex; flex-direction: column; background-color: var(--color-gray-50);">
     <%= turbo_stream_from @room, target: "messages" %>
-    <div id="messages" class="d-flex flex-column gap-3">
+    <div id="messages" style="display: flex; flex-direction: column; gap: var(--space-3);">
       <%= render @messages %>
     </div>
-  </div>
+  </main>
 
   <!-- Footer Input -->
-  <footer class="bg-white border-top p-3 sticky-bottom">
+  <footer style="flex-shrink: 0; background-color: var(--color-white); border-top: 1px solid var(--border-color); padding: var(--space-3);">
     <%= form_with model: [@room, Message.new], url: room_messages_path(@room.token), 
-                  html: { multipart: true },
+                  html: { multipart: true, style: "display: flex; flex-direction: column; gap: var(--space-2); margin: 0;" },
                   data: { 
                     controller: "reset-form chat-input file-upload", 
                     action: "turbo:submit-end->reset-form#reset turbo:submit-end->chat-input#reset turbo:submit-end->file-upload#reset" 
                   } do |form| %>
       
-      <!-- File preview bar (hidden by default) -->
-      <div class="file-preview-bar d-none mb-2 px-3 py-2 rounded-3 d-flex align-items-center justify-content-between"
-           data-file-upload-target="preview" style="border-radius: var(--radius-md);">
-        <div class="d-flex align-items-center gap-2 text-truncate">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="flex-shrink-0">
-            <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
-          </svg>
-          <span class="text-truncate fw-medium ds-body-sm" data-file-upload-target="filename"></span>
-          <span class="text-secondary ds-caption flex-shrink-0" data-file-upload-target="filesize"></span>
+      <!-- File Preview Bar -->
+      <div data-file-upload-target="preview" class="d-none" style="display: flex; align-items: center; justify-content: space-between; background-color: var(--color-gray-100); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--space-2) var(--space-3);">
+        <div style="display: flex; align-items: center; gap: var(--space-2); overflow: hidden;">
+          <i data-lucide="file" style="width: 16px; height: 16px; color: var(--color-gray-500); flex-shrink: 0;"></i>
+          <span data-file-upload-target="filename" style="font-size: var(--text-sm); font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></span>
+          <span data-file-upload-target="filesize" style="font-size: var(--text-xs); color: var(--color-gray-500); flex-shrink: 0;"></span>
         </div>
-        <button type="button" class="btn-close ms-2" 
-                data-action="click->file-upload#removeFile"
-                aria-label="Remover arquivo">&times;</button>
+        <button type="button" data-action="click->file-upload#removeFile" style="background: none; border: none; cursor: pointer; color: var(--color-gray-500); padding: 0; display: flex; align-items: center; justify-content: center;">
+          <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+        </button>
       </div>
 
-      <div class="input-wrap d-flex align-items-end shadow-sm rounded-4 border p-1 bg-white" style="border-radius: var(--radius-lg);">
-        <!-- Hidden file input -->
-        <%= form.file_field :file, 
-                            class: "d-none", 
-                            id: "file-input",
-                            data: { 
-                              file_upload_target: "input",
-                              action: "change->file-upload#fileSelected" 
-                            },
-                            accept: "*/*" %>
+      <!-- Input Area -->
+      <div style="display: flex; align-items: flex-end; gap: var(--space-2); background-color: var(--color-white); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-1); box-shadow: var(--shadow-sm);">
+        <%= form.file_field :file, class: "d-none", data: { file_upload_target: "input", action: "change->file-upload#fileSelected" }, accept: "*/*" %>
         
-        <!-- Attach file button -->
-        <button type="button" 
-                class="file-attach-btn border-0 rounded-3 px-3 py-2 ms-1 mb-1 d-flex align-items-center justify-content-center" 
-                data-action="click->file-upload#openFilePicker"
-                title="Anexar arquivo (máx. 25MB)">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0V3z"/>
-          </svg>
+        <button type="button" data-action="click->file-upload#openFilePicker" title="Anexar arquivo" style="background: none; border: none; cursor: pointer; color: var(--color-gray-500); padding: var(--space-2); display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); flex-shrink: 0;">
+          <i data-lucide="paperclip" style="width: 20px; height: 20px;"></i>
         </button>
 
-        <%= form.text_area :content, 
-                           placeholder: "Digite sua mensagem...", 
-                           class: "input border-0 bg-transparent py-2 px-3 no-focus-ring flex-grow-1", 
-                           rows: 1,
-                           data: { 
-                             chat_input_target: "input",
-                             file_upload_target: "messageInput",
-                             action: "keydown->chat-input#handleKeydown input->chat-input#autoResize"
-                           },
-                           style: "resize: none; max-height: 200px; overflow-y: auto; box-shadow: none;",
-                           autocomplete: "off" %>
-        <%= form.submit "Enviar", class: "btn btn-primary fw-bold px-4 py-2 ms-2 mb-1", style: "border-radius: var(--radius-md);" %>
+        <%= form.text_area :content, placeholder: "Digite sua mensagem...", rows: 1, data: { chat_input_target: "input", file_upload_target: "messageInput", action: "keydown->chat-input#handleKeydown input->chat-input#autoResize" }, style: "flex: 1; border: none; background: transparent; padding: var(--space-2) 0; resize: none; max-height: 120px; overflow-y: auto; outline: none; font-family: var(--font-body); font-size: var(--text-base); margin: 0; min-width: 0;", autocomplete: "off" %>
+        
+        <div style="padding: var(--space-1); flex-shrink: 0;">
+          <%= form.submit "Enviar", class: "ffds-btn ffds-btn-primary", style: "font-weight: bold; border-radius: var(--radius-md); padding: var(--space-2) var(--space-4);" %>
+        </div>
       </div>
     <% end %>
   </footer>
 </div>
+
 <script>
   const container = document.getElementById('messages_container');
-  container.scrollTop = container.scrollHeight;
-  const observer = new MutationObserver(() => {
-    container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+  if (container) {
+    container.scrollTop = container.scrollHeight;
+    const observer = new MutationObserver(() => {
+      container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+      if(window.FFDS && FFDS.createIcons) FFDS.createIcons({ icons: FFDS.icons });
+    });
+    observer.observe(document.getElementById('messages'), { childList: true });
+  }
+  document.addEventListener('turbo:load', () => {
+    if(window.FFDS && FFDS.createIcons) FFDS.createIcons({ icons: FFDS.icons });
   });
-  observer.observe(document.getElementById('messages'), { childList: true });
 </script>

@@ -17,13 +17,14 @@
     <%= favicon_link_tag 'favicon.ico' %>
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%# Load Farmácia UFMG Design System %>
+    <% ds_domain = Rails.env.production? ? "https://design-system.farmacia.ufmg.br" : "https://design-system.farmacia.local" %>
+    <link rel="stylesheet" href="<%= ds_domain %>/dist/latest/farmacia-ds.min.css">
+    <script src="<%= ds_domain %>/dist/latest/farmacia-ds.min.js"></script>
     <%= javascript_importmap_tags %>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   </head>
 
-  <body class="bg-light text-dark vh-100 w-100 m-0 p-0 overflow-hidden d-flex flex-column" data-current-sender-identifier="<%= session[:sender_identifier] %>">
+  <body class="ffds-root" data-current-sender-identifier="<%= session[:sender_identifier] %>" style="margin: 0; padding: 0; background-color: var(--color-gray-100); height: 100vh; display: flex; flex-direction: column; overflow: hidden;">
     <%= yield %>
   </body>
 </html>
