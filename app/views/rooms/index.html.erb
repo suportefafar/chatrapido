@@ -12,7 +12,7 @@
     
     <p style="color: var(--color-white); font-family: var(--font-body); font-size: var(--text-lg); opacity: 0.8; margin-bottom: var(--space-6);">Comunicação efêmera, segura e instantânea para a comunidade acadêmica.</p>
 
-    <%= button_to "Criar Nova Sala", rooms_path, class: "ffds-btn ffds-btn-primary", style: "width: 100%; font-weight: bold; padding: var(--space-3) var(--space-4); font-size: var(--text-lg); margin-bottom: var(--space-6); justify-content: center;" %>
+    <%= button_to "Criar Nova Sala", rooms_path, class: "btn btn-success", style: "width: 100%; font-weight: bold; padding: var(--space-3) var(--space-4); font-size: var(--text-lg); margin-bottom: var(--space-6); justify-content: center;" %>
 
     <div style="display: flex; align-items: center; margin-bottom: var(--space-6);">
       <hr style="flex: 1; border: none; border-top: 1px solid rgba(255,255,255,0.2); margin: 0;">
@@ -22,7 +22,7 @@
 
     <%= form_with url: join_rooms_path, method: :post, style: "display: flex; gap: var(--space-2); flex-wrap: wrap; justify-content: center;" do |form| %>
       <%= form.text_field :token, placeholder: "CÓDIGO DA SALA", maxlength: 6, style: "flex: 1; min-width: 200px; text-align: center; text-transform: uppercase; font-weight: bold; font-family: var(--font-mono); letter-spacing: 0.1em; font-size: var(--text-lg); border: none; border-radius: var(--radius-md); padding: var(--space-3); outline: none;" %>
-      <%= form.submit "Entrar", class: "ffds-btn ffds-btn-primary", style: "font-weight: bold; padding: var(--space-3) var(--space-6);" %>
+      <%= form.submit "Entrar", class: "btn btn-primary", style: "font-weight: bold; padding: var(--space-3) var(--space-6);" %>
     <% end %>
   </div>
 </section>

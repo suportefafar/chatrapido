@@ -3,7 +3,7 @@ class Message < ApplicationRecord
 
   has_one_attached :file
 
-  validates :content, length: { maximum: 1000 }
+  validates :content, length: { maximum: 10000 }
   validates :sender_identifier, presence: true
   validate :content_or_file_present
   validate :file_size_within_limit

@@ -16,7 +16,7 @@
       </div>
     </div>
     <div style="display: flex; align-items: center; gap: var(--space-3); flex-shrink: 0;">
-      <button onclick="navigator.clipboard.writeText(window.location.href); alert('Link copiado!')" class="ffds-btn ffds-btn-primary" style="padding: var(--space-2) var(--space-3); font-size: var(--text-sm); font-weight: bold; display: flex; align-items: center; gap: var(--space-2);">
+      <button onclick="navigator.clipboard.writeText(window.location.href); alert('Link copiado!')" class="btn btn-info" style="padding: var(--space-2) var(--space-3); font-size: var(--text-sm); font-weight: bold; display: flex; align-items: center; gap: var(--space-2);">
         <i data-lucide="copy" style="width: 16px; height: 16px;"></i> <span class="d-none d-sm-inline">Copiar Link</span>
       </button>
       <%= link_to "Sair", root_path, style: "color: var(--color-white); text-decoration: none; font-size: var(--text-sm); opacity: 0.8; font-weight: bold;" %>
@@ -60,10 +60,10 @@
           <i data-lucide="paperclip" style="width: 20px; height: 20px;"></i>
         </button>
 
-        <%= form.text_area :content, placeholder: "Digite sua mensagem...", rows: 1, data: { chat_input_target: "input", file_upload_target: "messageInput", action: "keydown->chat-input#handleKeydown input->chat-input#autoResize" }, style: "flex: 1; border: none; background: transparent; padding: var(--space-2) 0; resize: none; max-height: 120px; overflow-y: auto; outline: none; font-family: var(--font-body); font-size: var(--text-base); margin: 0; min-width: 0;", autocomplete: "off" %>
+        <%= form.text_area :content, placeholder: "Digite sua mensagem...", rows: 1, maxlength: 10000, data: { chat_input_target: "input", file_upload_target: "messageInput", action: "keydown->chat-input#handleKeydown input->chat-input#autoResize" }, style: "flex: 1; border: none; background: transparent; padding: var(--space-2) 0; resize: none; max-height: 120px; overflow-y: auto; outline: none; font-family: var(--font-body); font-size: var(--text-base); margin: 0; min-width: 0;", autocomplete: "off" %>
         
         <div style="padding: var(--space-1); flex-shrink: 0;">
-          <%= form.submit "Enviar", class: "ffds-btn ffds-btn-primary", style: "font-weight: bold; border-radius: var(--radius-md); padding: var(--space-2) var(--space-4);" %>
+          <%= form.submit "Enviar", class: "btn btn-primary", style: "font-weight: bold; border-radius: var(--radius-md); padding: var(--space-2) var(--space-4);" %>
         </div>
       </div>
     <% end %>
