@@ -18,9 +18,8 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%# Load Farmácia UFMG Design System %>
-    <% ds_domain = Rails.env.production? ? "https://design-system.farmacia.ufmg.br" : "https://design-system.farmacia.local" %>
-    <link rel="stylesheet" href="<%= ds_domain %>/dist/latest/farmacia-ds.min.css">
-    <script src="<%= ds_domain %>/dist/latest/farmacia-ds.min.js"></script>
+    <link rel="stylesheet" href="https://design-system.farmacia.ufmg.br/dist/latest/farmacia-ds.min.css">
+    <script src="https://design-system.farmacia.ufmg.br/dist/latest/farmacia-ds.min.js"></script>
     <%= javascript_importmap_tags %>
   </head>
 
