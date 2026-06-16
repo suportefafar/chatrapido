@@ -1,6 +1,6 @@
 <% content_for :title, "Sala #{@room.token} | ChatRápido" %>
 
-<div class="d-flex flex-column vh-100 w-100 mx-auto bg-white shadow-sm overflow-hidden" style="max-width: 48rem;">
+<div class="d-flex flex-column flex-grow-1 w-100 mx-auto bg-white shadow-sm overflow-hidden" style="max-width: 48rem;">
   <!-- Header -->
   <header class="flex-shrink-0 d-flex align-items-center justify-content-between p-3 bg-white text-dark border-bottom border-4 border-warning">
     <div class="d-flex align-items-center gap-3">
@@ -16,6 +16,9 @@
       </div>
     </div>
     <div class="d-flex align-items-center gap-3 flex-shrink-0">
+      <%= link_to room_path(@room.token), class: "btn btn-outline-secondary btn-sm d-flex align-items-center gap-2", title: "Atualizar Mensagens" do %>
+        <i class="bi bi-arrow-clockwise"></i> <span class="d-none d-sm-inline">Atualizar</span>
+      <% end %>
       <button onclick="navigator.clipboard.writeText(window.location.href); alert('Link copiado!')" class="btn btn-warning btn-sm fw-bold d-flex align-items-center gap-2">
         <i class="bi bi-copy"></i> <span class="d-none d-sm-inline">Copiar Link</span>
       </button>
@@ -74,9 +77,72 @@
   const container = document.getElementById('messages_container');
   if (container) {
     container.scrollTop = container.scrollHeight;
-    const observer = new MutationObserver(() => {
+    const currentSender = document.body.dataset.currentSenderIdentifier;
+    
+    const observer = new MutationObserver((mutations) => {
+      let hasNewExternalMessage = false;
+      
+      mutations.forEach(mutation => {
+        mutation.addedNodes.forEach(node => {
+          if (node.nodeType === Node.ELEMENT_NODE && node.hasAttribute('data-message-appearance-sender-identifier-value')) {
+            const senderId = node.getAttribute('data-message-appearance-sender-identifier-value');
+            if (senderId !== currentSender) {
+              hasNewExternalMessage = true;
+              
+              const textContent = node.querySelector('[data-clipboard-target="content"]')?.innerText || "Novo arquivo anexado";
+              
+              if (document.hidden && "Notification" in window && Notification.permission === "granted") {
+                new Notification("ChatRápido - Nova Mensagem", {
+                  body: textContent,
+                  icon: '/icon.png'
+                });
+              }
+            }
+          }
+        });
+      });
+      
+      if (hasNewExternalMessage) {
+        playNotificationSound();
+      }
+      
       container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
     });
+    
     observer.observe(document.getElementById('messages'), { childList: true });
+  }
+
+  function playNotificationSound() {
+    try {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(587.33, audioCtx.currentTime); 
+      oscillator.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1); 
+      
+      gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+      gainNode.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.05);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      
+      oscillator.start();
+      oscillator.stop(audioCtx.currentTime + 0.3);
+    } catch(e) {
+      console.log("Audio notification blocked", e);
+    }
+  }
+  
+  if ("Notification" in window && Notification.permission === "default") {
+    const requestPerm = () => {
+      Notification.requestPermission();
+      document.removeEventListener('click', requestPerm);
+      document.removeEventListener('keydown', requestPerm);
+    };
+    document.addEventListener('click', requestPerm);
+    document.addEventListener('keydown', requestPerm);
   }
 </script>
