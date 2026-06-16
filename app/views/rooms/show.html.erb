@@ -40,7 +40,7 @@
                   html: { multipart: true, class: "d-flex flex-column gap-2 m-0" },
                   data: { 
                     controller: "reset-form chat-input file-upload", 
-                    action: "turbo:submit-end->reset-form#reset turbo:submit-end->chat-input#reset turbo:submit-end->file-upload#reset" 
+                    action: "turbo:submit-start->file-upload#submitStart turbo:submit-end->reset-form#reset turbo:submit-end->chat-input#reset turbo:submit-end->file-upload#reset" 
                   } do |form| %>
       
       <!-- File Preview Bar -->
