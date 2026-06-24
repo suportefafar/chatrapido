@@ -20,7 +20,7 @@ The entry point of the application where users can create or join rooms.
   - **Logo**: The ChatRápido icon/logo centered.
   - **Tag/Badge**: Small identifier (e.g., "Farmácia UFMG").
   - **Title**: "ChatRápido" (Prominent, usually serif/display font).
-  - **Subtitle**: "Comunicação efêmera, segura e instantânea para a comunidade acadêmica."
+  - **Subtitle**: "Comunicação efêmera, segura e instantânea."
 - **Actions Area**:
   - **Create Button**: A prominent primary button to create a new room ("Criar Nova Sala"). Should span the full width of its container.
   - **Divider**: A visual separator with text ("OU ENTRE EM UMA SALA").
