@@ -27,9 +27,9 @@
   </header>
 
   <!-- Messages Viewport -->
-  <main id="messages_container" class="flex-grow-1 overflow-auto p-4 d-flex flex-column bg-white">
+  <main id="messages_container" class="flex-grow-1 overflow-auto p-4 d-flex flex-column bg-white" data-controller="chat-scroll">
     <%= turbo_stream_from @room, target: "messages" %>
-    <div id="messages" class="d-flex flex-column gap-3">
+    <div id="messages" class="d-flex flex-column gap-3" data-chat-scroll-target="messages">
       <%= render @messages %>
     </div>
   </main>
@@ -73,76 +73,3 @@
   </footer>
 </div>
 
-<script>
-  const container = document.getElementById('messages_container');
-  if (container) {
-    container.scrollTop = container.scrollHeight;
-    const currentSender = document.body.dataset.currentSenderIdentifier;
-    
-    const observer = new MutationObserver((mutations) => {
-      let hasNewExternalMessage = false;
-      
-      mutations.forEach(mutation => {
-        mutation.addedNodes.forEach(node => {
-          if (node.nodeType === Node.ELEMENT_NODE && node.hasAttribute('data-message-appearance-sender-identifier-value')) {
-            const senderId = node.getAttribute('data-message-appearance-sender-identifier-value');
-            if (senderId !== currentSender) {
-              hasNewExternalMessage = true;
-              
-              const textContent = node.querySelector('[data-clipboard-target="content"]')?.innerText || "Novo arquivo anexado";
-              
-              if (document.hidden && "Notification" in window && Notification.permission === "granted") {
-                new Notification("ChatRápido - Nova Mensagem", {
-                  body: textContent,
-                  icon: '/icon.png'
-                });
-              }
-            }
-          }
-        });
-      });
-      
-      if (hasNewExternalMessage) {
-        playNotificationSound();
-      }
-      
-      container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
-    });
-    
-    observer.observe(document.getElementById('messages'), { childList: true });
-  }
-
-  function playNotificationSound() {
-    try {
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const oscillator = audioCtx.createOscillator();
-      const gainNode = audioCtx.createGain();
-      
-      oscillator.type = 'sine';
-      oscillator.frequency.setValueAtTime(587.33, audioCtx.currentTime); 
-      oscillator.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1); 
-      
-      gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-      gainNode.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.05);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-      
-      oscillator.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
-      
-      oscillator.start();
-      oscillator.stop(audioCtx.currentTime + 0.3);
-    } catch(e) {
-      console.log("Audio notification blocked", e);
-    }
-  }
-  
-  if ("Notification" in window && Notification.permission === "default") {
-    const requestPerm = () => {
-      Notification.requestPermission();
-      document.removeEventListener('click', requestPerm);
-      document.removeEventListener('keydown', requestPerm);
-    };
-    document.addEventListener('click', requestPerm);
-    document.addEventListener('keydown', requestPerm);
-  }
-</script>
