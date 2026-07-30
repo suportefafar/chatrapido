@@ -10,7 +10,7 @@ class RoomsController < ApplicationController
   def show
     @room = Room.find_by!(token: params[:token])
     @messages = @room.messages.order(created_at: :desc).limit(100).reverse
-    
+
     session[:sender_identifier] ||= SecureRandom.uuid
   end
 
