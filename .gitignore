@@ -38,3 +38,8 @@
 !/app/assets/builds/.keep
 
 /vendor/bundle
+
+# Olympus: local runtime configuration
+.env
+.env.*
+!/.env.example
