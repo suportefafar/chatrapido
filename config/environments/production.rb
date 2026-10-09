@@ -82,6 +82,7 @@ Rails.application.configure do
   # Enable DNS rebinding protection and other `Host` header attacks.
   config.hosts = [
     "chatrapido.farmacia.ufmg.br",
+    "c.farmacia.ufmg.br",
     "chatrapido.farmacia.local"
   ]
 
