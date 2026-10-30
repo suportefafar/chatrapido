@@ -27,7 +27,7 @@
   </header>
 
   <!-- Messages Viewport -->
-  <main id="messages_container" class="flex-grow-1 overflow-auto p-4 d-flex flex-column bg-white" data-controller="chat-scroll">
+  <main id="messages_container" class="flex-grow-1 overflow-auto p-4 d-flex flex-column bg-white" data-controller="chat-scroll" data-chat-scroll-notification-icon-value="<%= image_path('icon.png') %>">
     <%= turbo_stream_from @room, target: "messages" %>
     <div id="messages" class="d-flex flex-column gap-3" data-chat-scroll-target="messages">
       <%= render @messages %>

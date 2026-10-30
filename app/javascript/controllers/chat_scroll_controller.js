@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["messages"]
+  static values = { notificationIcon: String }
 
   connect() {
     this.scrollToBottom()
@@ -29,7 +30,7 @@ export default class extends Controller {
               if (document.hidden && "Notification" in window && Notification.permission === "granted") {
                 new Notification("ChatRápido - Nova Mensagem", {
                   body: textContent,
-                  icon: "/icon.png"
+                  icon: this.notificationIconValue
                 })
               }
             }
